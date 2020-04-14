@@ -31,7 +31,7 @@ root api url: **_findmeapp.tech_**
   - **name**
   - description
   
-- /item/edit
+- /item/edit  - **[atleast 1 of the 3 additional parameters is required]**
   - **item_id**
   - name
   - description
