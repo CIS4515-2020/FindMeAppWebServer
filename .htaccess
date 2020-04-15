@@ -1,0 +1,23 @@
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+Options +FollowSymLinks
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
+RewriteCond %{DOCUMENT_ROOT}/$1 -f
+RewriteRule ^[^/]+/([^.]+\.(?:js|css|jpe?g|png|gif))$ /$1 [L,R=301,NC]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/(.*)/(.*)$ index.php?page=$1&subpage=$2&subpage2=$3 [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/(.*)$ index.php?page=$1&subpage=$2 [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/?$ index.php?page=$1 [L,QSA]
