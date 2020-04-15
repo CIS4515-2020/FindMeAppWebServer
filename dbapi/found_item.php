@@ -49,6 +49,7 @@
             $item = new FoundItemMessage( $attr );
             if( $item->insert() ){
                 $result['result'] = 'success';
+                $result['data'] = [$item];
             }
         }catch (Exception $e){
             $result['exception'] = $e->getMessage();
@@ -68,7 +69,7 @@
             }
             
             $item_messages = FoundItemMessage::scopeByItem($item_id);
-            $result['found_item_message'] = $item_messages;
+            $result['data'] = $item_messages;
             $result['result'] = 'success';
         }catch (Exception $e){
             $result['exception'] = $e->getMessage();

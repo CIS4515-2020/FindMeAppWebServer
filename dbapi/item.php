@@ -37,6 +37,8 @@
             $item = new Item( $attr );
             if( $item->insert() ){
                 $result['result'] = 'success';
+                $result['item_id'] = $item->getId();
+                $result['data'] = [$item];
             }
         }catch (Exception $e){
             $result['exception'] = $e->getMessage();
@@ -56,7 +58,7 @@
             }
             
             $items = Item::scopeByUser($user_id);
-            $result['item'] = $items;
+            $result['data'] = $items;
             $result['result'] = 'success';
         }catch (Exception $e){
             $result['exception'] = $e->getMessage();
@@ -93,6 +95,7 @@
             if( $item->isDirty() ){
                 if( $item->save() ){
                     $result['result'] = 'success';
+                    $result['data'] = [$item];
                 }else{
                     $result['error'] = 'Could not save changes.';
                 }

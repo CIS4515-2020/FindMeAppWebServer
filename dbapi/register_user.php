@@ -10,7 +10,7 @@
     use dbapi\Utilities\MySqlHandler;
     use dbapi\Utilities\Hash;
     
-    $result = ['register' => 'failed', 'error' => ''];
+    $result = ['result' => 'failed', 'error' => ''];
     
     try{
     
@@ -57,8 +57,10 @@
         $affected_rows = $dbHandler->executePreparedScalarQuery( $query, $args );
         if( $affected_rows === 1 ){
             
-            $result['register'] = 'success';
+            $result['result'] = 'success';
             $result['user_id'] = $dbHandler->getLastInsertId();
+            $user = User::find($result['user_id']);
+            $result['data'] = [$user];
             
         }else{
             if( $dbHandler->errorno === MySqlHandler::$DUPLICATE_ERROR ){

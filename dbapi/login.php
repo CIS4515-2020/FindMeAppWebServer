@@ -9,7 +9,7 @@
     use dbapi\Utilities\MySqlHandler;
     use dbapi\Models\User;
     
-    $result = ['login' => 'failed', 'error' => ''];
+    $result = ['result' => 'failed', 'error' => ''];
     
     try{
     
@@ -20,8 +20,8 @@
         if( !is_null($user) ){
             
             if( $user->verifyPassword($pass) ){
-                $result['login'] = 'success';
-                $result['user'] = $user->getAttributes();
+                $result['result'] = 'success';
+                $result['data'] = [$user];
             }else{
                 $result['error'] = 'Invalid credentials.';
             }

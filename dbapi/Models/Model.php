@@ -48,6 +48,10 @@ class Model implements JsonSerializable
         return $this->attributes;
     }
     
+    public function getId(){
+        return $this->attributes[$this->key];
+    }
+    
     //find model by id
     //throws exception
     public static function find( $id ){
