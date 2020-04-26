@@ -23,6 +23,9 @@ root api url: **_findmeapp.tech_**
   - **password**
 
 ### Item
+- /item/get
+  - **item_id**
+
 - /item/list
   - **user_id**
   
