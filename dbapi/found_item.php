@@ -4,9 +4,12 @@
        //die('post resquest only.');
     }
 
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/Models/Item.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/Models/FoundItemMessage.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/Utilities/Firebase.php';
     
-    use dbapi\Utilities\MySqlHandler;
+    use dbapi\Utilities\FireBase;
+    use dbapi\Models\Item;
     use dbapi\Models\FoundItemMessage;
     
     $action = $subpage;
@@ -16,7 +19,7 @@
         case 'list': listItems(); break;
         case 'edit': editItem(); break;
         case 'delete': deleteItem(); break;
-        default: header("Location: /404.html");
+        default: header("Location: /404.php");
     }
     
     //handle add item request
@@ -46,10 +49,12 @@
             }
             
             
-            $item = new FoundItemMessage( $attr );
-            if( $item->insert() ){
+            $fitem = new FoundItemMessage( $attr );
+            if( $fitem->insert() ){
                 $result['result'] = 'success';
-                $result['data'] = [$item];
+                $result['data'] = [$fitem];
+                $item = Item::find($item_id);
+                FireBase::sendCloudMessage( $item, $fitem );
             }
         }catch (Exception $e){
             $result['exception'] = $e->getMessage();

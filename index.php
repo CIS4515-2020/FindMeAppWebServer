@@ -11,11 +11,13 @@
                     break;
         case 'item': include_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/item.php';
                     break;
-        case 'found-item': include_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/found_item.php';
+        case 'found-item-message': include_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/found_item.php';
+                    break;
+        case 'found-item': include_once $_SERVER['DOCUMENT_ROOT'] . '/found_item.php';
                     break;
         case '': include_once 'index.html';
                     break;
-        default: include_once '404.html'; break;
+        default: include_once '404.php'; break;
     }
 
 ?>

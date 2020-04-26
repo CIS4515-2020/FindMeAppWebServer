@@ -6,9 +6,11 @@
 
     require_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/Utilities/MySqlHandler.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/Utilities/Hash.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/Models/User.php';
     
     use dbapi\Utilities\MySqlHandler;
     use dbapi\Utilities\Hash;
+    use dbapi\Models\User;
     
     $result = ['result' => 'failed', 'error' => ''];
     

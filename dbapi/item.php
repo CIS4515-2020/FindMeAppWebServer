@@ -6,28 +6,51 @@
 
     require_once $_SERVER['DOCUMENT_ROOT'] . '/dbapi/Models/Item.php';
     
-    use dbapi\Utilities\MySqlHandler;
     use dbapi\Models\Item;
     
     $action = $subpage;
     
     switch( $action ){
         case 'add': addItem(); break;
+        case 'get': getItem(); break;
         case 'list': listItems(); break;
         case 'edit': editItem(); break;
         case 'delete': deleteItem(); break;
-        default: header("Location: /404.html");
+        case 'getid': getItemId(); break;
+        default: header("Location: /404.php");
+    }
+    
+    //handle get item request
+    function getItem(){
+        $item_id = (isset($_REQUEST['item_id']) ? $_REQUEST['item_id'] : null);
+        
+        try{
+            
+            if( is_null($item_id) || empty($item_id) ){
+                throw new Exception('Item id missing.');
+            }
+            
+            $item = Item::find($item_id);
+            $result['data'] = [$item];
+            $result['result'] = 'success';
+        }catch (Exception $e){
+            $result['exception'] = $e->getMessage();
+        }
+        
+        echo json_encode($result);
     }
     
     //handle add item request
     function addItem(){
         $result = ['result' => 'failed', 'error' => ''];
         
+        $item_id = (isset($_REQUEST['item_id']) ? $_REQUEST['item_id'] : null);
         $user_id = (isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : null);
         $name = (isset($_REQUEST['name']) ? $_REQUEST['name'] : null);
         $description = (isset($_REQUEST['description']) ? $_REQUEST['description'] : null);
         
         $attr = [
+            'item_id' => $item_id,
             'user_id' => $user_id,
             'name' => $name,
             'description' => $description
@@ -54,7 +77,7 @@
         try{
             
             if( is_null($user_id) || empty($user_id) ){
-                throw new Exception('Item id missing.');
+                throw new Exception('User id missing.');
             }
             
             $items = Item::scopeByUser($user_id);
@@ -124,6 +147,26 @@
             
             if( Item::delete($item_id) ){
                 $result['result'] = 'success';
+            }else{
+                
+            }
+        }catch (Exception $e){
+            $result['exception'] = $e->getMessage();
+        }
+        
+        echo json_encode($result);
+    }
+    
+    //handle get item id request
+    function getItemId(){
+        $result = ['result' => 'failed', 'error' => ''];
+        
+        try{
+            
+            $next_id = Item::nextId();
+            if( $next_id > 0 ){
+                $result['result'] = 'success';
+                $result['data'] = [['item_id' => $next_id]];
             }
         }catch (Exception $e){
             $result['exception'] = $e->getMessage();

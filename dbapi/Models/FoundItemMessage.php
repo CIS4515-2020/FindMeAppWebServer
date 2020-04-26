@@ -32,6 +32,18 @@ class FoundItemMessage extends Model
         $this->setAttributes( $attributes );
     }
     
+    public function getId(){
+        return $this->attributes[$this->key];
+    }
+    
+    public function getItemId(){
+        return $this->attributes['item_id'];
+    }
+    
+    public function getMessage(){
+        return $this->attributes['message'];
+    }
+    
     public function setCoordinates( $lat, $lng ){
         $this->attributes['lat'] = $lat;
         $this->attributes['lng'] = $lng;
@@ -49,7 +61,7 @@ class FoundItemMessage extends Model
         $items = [];
         
         try{
-            $query = "SELECT * FROM `found_item_message` WHERE item_id = ?";
+            $query = "SELECT * FROM `found_item_message` WHERE item_id = ? ORDER BY found_on DESC";
             $argTypes = "i";
             $args = [];
             $args[] = &$argTypes;
@@ -63,8 +75,9 @@ class FoundItemMessage extends Model
             if( $select !== null && $select instanceof mysqli_stmt && $select->num_rows > 0 ){
                 while( $select->fetch() ){
                     $item = new self();
-                    $item->original = $row;
-                    $item->attributes = $row;
+                    $values = $dbHandler->derefrence_array($row);
+                    $item->original = $values;
+                    $item->attributes = $values;
                     $items[] = $item;
                 }
             

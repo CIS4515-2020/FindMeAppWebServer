@@ -135,6 +135,7 @@ class Model implements JsonSerializable
     public function insert(){
         
         $result = false;
+        $key_provided = false;
         
         try{
             $cols = '';
@@ -145,6 +146,9 @@ class Model implements JsonSerializable
             $args[] = &$arg_types;
             foreach( $this->fillable as $attr ){
                 if( array_key_exists($attr, $this->attributes) && $this->attributes[$attr] != '' ){
+                    if( $attr == $this->key ){
+                        $key_provided = true;
+                    }
                     $arg_types .= $this->cols[$attr];
                     $args[] = &$this->attributes[$attr];
                     $bind[] = '?';
@@ -164,6 +168,9 @@ class Model implements JsonSerializable
             if( $affected_rows === 1 ){
                 
                 $result = true;
+                if( ! $key_provided ){
+                    $this->attributes[$this->key] = $dbHandler->getLastInsertId();
+                }
                 
             }else{
                 if( $dbHandler->errorno === MySqlHandler::$DUPLICATE_ERROR ){
@@ -179,8 +186,6 @@ class Model implements JsonSerializable
                 throw new Exception( $e->getMessage() );
             }
         }
-        
-        $this->attributes[$this->key] = $dbHandler->getLastInsertId();
         
         return $result;
     }
